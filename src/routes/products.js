@@ -21,7 +21,7 @@ export async function getProducts(req, res) {
 export async function filterProducts(req, res) {
     try {
         const { category } = req.params;
-        const { subCategory, query, price} = req.query;
+        const { subCategory, query, price, order} = req.query;
 
         const brands = JSON.parse(query);
         let brandsQuery = '';
@@ -37,7 +37,16 @@ export async function filterProducts(req, res) {
         subCategory ? subCategoryQuery = `"subCategories".name = $3 AND` : '';
 
         const queryArray = subCategory ? [category, price, subCategory] : [category, price]
-
+        
+        let orderBy =''
+        if (order === 'Menorpreço') {
+            orderBy = 'ORDER BY price ASC'
+        } else if (order === 'Maiorpreço') {
+            orderBy = 'ORDER BY price DESC'
+        } else if (order === 'Nome(A-Z)') {
+            orderBy = 'ORDER BY name ASC'
+        }
+        console.log(orderBy);
         const products = await connection.query(`
             SELECT products.* FROM products 
             JOIN categories
@@ -49,6 +58,7 @@ export async function filterProducts(req, res) {
             products.price < $2 AND
             ${subCategoryQuery} 
             ${brandsQuery}
+            ${orderBy}
         `, queryArray)
 
         res.send(products.rows).status(200);
