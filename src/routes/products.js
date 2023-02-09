@@ -32,9 +32,11 @@ export async function filterProducts(req, res) {
                 brandsQuery = brandsQuery.slice(0, -3);
             }
         });
-
+       
         let subCategoryQuery = '';
-        subCategory ? subCategoryQuery = `"subCategories".name = $3 AND` : '';
+        subCategory ? subCategoryQuery = `AND "subCategories".name = $3 ` : '';
+
+        if (brandsQuery.length !== 0) subCategoryQuery += 'AND';
 
         const queryArray = subCategory ? [category, price, subCategory] : [category, price]
         
@@ -46,7 +48,7 @@ export async function filterProducts(req, res) {
         } else if (order === 'Nome(A-Z)') {
             orderBy = 'ORDER BY name ASC'
         }
-        console.log(orderBy);
+
         const products = await connection.query(`
             SELECT products.* FROM products 
             JOIN categories
@@ -55,7 +57,7 @@ export async function filterProducts(req, res) {
             JOIN brands
             ON products."brandId" = brands.id
             WHERE categories.name = $1 AND 
-            products.price < $2 AND
+            products.price < $2
             ${subCategoryQuery} 
             ${brandsQuery}
             ${orderBy}
