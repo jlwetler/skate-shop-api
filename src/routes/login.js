@@ -22,9 +22,11 @@ export async function getLogin(req, res) {
             `,[token, id]);
 
             const session = await connection.query(`
-                SELECT users.id, users.name, users.email, authentication.token
+                SELECT users.id, users.name, users.email, authentication.token, address.*
                 FROM users JOIN authentication
                 ON users.id = authentication."userId"
+                JOIN address
+                ON users.id = address."userId"
                 WHERE users.id = $1
             `, [id]);
             res.send(session.rows[0]).status(200);

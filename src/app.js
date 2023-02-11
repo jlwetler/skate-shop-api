@@ -5,7 +5,7 @@ import { getBrands, getProductBrand } from './routes/brands.js';
 import { getProducts, filterProducts } from './routes/products.js'
 import { getSearch } from './routes/search.js';
 import { getLogin } from './routes/login.js';
-import { signUp } from './routes/signUp.js';
+import { signUp, signUpAddress } from './routes/signUp.js';
 
 const app = express();
 app.use(cors());
@@ -28,6 +28,8 @@ app.get('/search/:search', async (req,res) => getSearch(req, res));
 app.post('/login', async (req,res) => getLogin(req, res));
 
 app.post('/sign-up', async (req,res) => signUp(req, res));
+
+app.post('/sign-up/address', async (req,res) => signUpAddress(req, res));
 
 
 export default app;

@@ -33,3 +33,39 @@ export async function signUp(req, res) {
         res.sendStatus(500);
     }
 }
+
+
+export async function signUpAddress(req, res) {
+
+    try {
+        const userSchema = joi.object({
+            address: joi.string().min(8).max(40).trim().required(), 
+            cep: joi.string().length(8).required(),
+            bairro: joi.string().min(3).required(),
+            city: joi.string().min(3).required(),
+            email: joi.string().min(3).email().required().label('Email') 
+        })
+
+        const object = await userSchema.validateAsync(req.body);
+        console.log(object);
+        const { address, cep, bairro, city, email } = object;
+
+        const emailCheck = await connection.query(`
+            SELECT * FROM users WHERE email = $1
+        `, [email]);
+
+        if (emailCheck.rows.length === 0) return res.sendStatus(409);
+
+        const userId = emailCheck.rows[0].id;
+
+        await connection.query(`
+            INSERT INTO address (address, cep, bairro, city, "userId" )
+            VALUES ($1, $2, $3, $4, $5)
+        `, [address, cep, bairro, city, userId]);
+
+        res.sendStatus(201);
+    } catch(e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+}
