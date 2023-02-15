@@ -7,7 +7,7 @@ export async function finishOrder(req, res) {
         const token = authorization?.replace("Bearer ", "");
         
         const { cartInfo, orderPrice} = req.body;
-        console.log(cartInfo);
+    
         const validateToken = await connection.query(`
             SELECT users.id FROM users
             JOIN authentication ON authentication."userId" = users.id
@@ -17,7 +17,7 @@ export async function finishOrder(req, res) {
         if(validateToken.rows.length === 0) return res.sendStatus(401);
 
         const userId = validateToken.rows[0].id;
-        console.log(userId);
+        
         await connection.query(`
             INSERT INTO purchases ("userId", date) 
             VALUES ($1, now())
@@ -27,9 +27,10 @@ export async function finishOrder(req, res) {
             SELECT id FROM purchases
             WHERE id = $1
         `, [userId])
+        const lastItem = purchase.rows.length - 1;
 
-        const purchaseId = purchase.rows[0].id;
-        console.log(purchaseId);
+        const purchaseId = purchase.rows[lastItem].id;
+       
         cartInfo.forEach(async ({id, quantity, price}) => {
             await connection.query(`
                 INSERT INTO product_purchase ("productId", "purchaseId", amount, "paidPrice")
@@ -37,9 +38,15 @@ export async function finishOrder(req, res) {
             `, [id, purchaseId, quantity, price])
         })
 
+        cartInfo.forEach(async ({id, quantity}) => {
+            await connection.query(`
+                UPDATE products SET stock = stock - $1
+                WHERE id = $2
+            `, [quantity, id])
+        })
+
         res.sendStatus(201);
     } catch(e) {
-        console.log(e);
         res.sendStatus(500);
     }
 }

@@ -7,6 +7,7 @@ import { getSearch } from './routes/search.js';
 import { getLogin } from './routes/login.js';
 import { signUp, signUpAddress } from './routes/signUp.js';
 import { finishOrder } from './routes/finishOrder.js';
+import { getOrders } from './routes/getOrders.js';
 
 const app = express();
 app.use(cors());
@@ -25,6 +26,8 @@ app.get('/products/:category', async (req,res) => getProducts(req, res));
 app.get('/filter/products/:category', async (req,res) => filterProducts(req, res));
 
 app.get('/search/:search', async (req,res) => getSearch(req, res));
+
+app.get('/get-orders', async (req,res) => getOrders(req, res));
 
 app.post('/login', async (req,res) => getLogin(req, res));
 
