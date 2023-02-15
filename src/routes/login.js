@@ -22,7 +22,7 @@ export async function getLogin(req, res) {
             `,[token, id]);
 
             const session = await connection.query(`
-                SELECT users.id, users.name, users.email, authentication.token, address.*
+                SELECT users.id, users.name, users."lastName", users.email, authentication.token, address.*
                 FROM users JOIN authentication
                 ON users.id = authentication."userId"
                 JOIN address
