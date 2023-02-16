@@ -19,14 +19,15 @@ export async function finishOrder(req, res) {
         const userId = validateToken.rows[0].id;
         
         await connection.query(`
-            INSERT INTO purchases ("userId", date) 
-            VALUES ($1, now())
-        `, [userId])
+            INSERT INTO purchases ("userId", date, "totalPrice") 
+            VALUES ($1, now(), $2)
+        `, [userId, orderPrice])
         
         const purchase = await connection.query(`
             SELECT id FROM purchases
-            WHERE id = $1
+            WHERE "userId" = $1
         `, [userId])
+
         const lastItem = purchase.rows.length - 1;
 
         const purchaseId = purchase.rows[lastItem].id;
@@ -47,6 +48,7 @@ export async function finishOrder(req, res) {
 
         res.sendStatus(201);
     } catch(e) {
+        console.log(e);
         res.sendStatus(500);
     }
 }
