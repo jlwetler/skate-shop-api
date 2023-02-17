@@ -1,7 +1,7 @@
 import { findUser } from "../repositories/userRepository.js";
 import { authenticate } from "../services/userService.js";
 
-export async function getLogin(req, res) {
+export async function login(req, res) {
     try {
         const { email, password } = req.body;
 
