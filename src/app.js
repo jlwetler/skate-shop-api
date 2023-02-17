@@ -6,8 +6,8 @@ import { products, filterProducts } from './controllers/productsController.js'
 import { search } from './controllers/searchController.js';
 import { login } from './controllers/userController.js';
 import { signUp, signUpAddress } from './controllers/signUpController.js';
-import { finishOrder } from './controllers/finishOrder.js';
-import { getOrders } from './controllers/ordersController.js';
+import { getOrders, finishOrder } from './controllers/ordersController.js';
+
 
 const app = express();
 app.use(cors());
