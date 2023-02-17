@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { getCategories, getSubCategories } from './controllers/categoriesController.js';
+import { categories, subCategories } from './controllers/categoriesController.js';
 import { getBrands, getProductBrand } from './controllers/brands.js';
 import { getProducts, filterProducts } from './controllers/products.js'
 import { getSearch } from './controllers/search.js';
@@ -19,13 +19,13 @@ app.post('/sign-up', signUp);
 
 app.post('/sign-up/address', signUpAddress); 
 
-app.get('/categories', getCategories);
+app.get('/categories', categories);
+
+app.get('/subcategories/:category', subCategories);
 
 app.get('/brands', getBrands);
 
 app.get('/brands/:brandId', getProductBrand);
-
-app.get('/subcategories/:category', getSubCategories);
 
 app.get('/products/:category', getProducts);
 
