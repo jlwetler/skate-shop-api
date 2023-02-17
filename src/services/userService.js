@@ -1,6 +1,7 @@
 import { createSession } from "../repositories/sessionRepository.js";
 import { v4 as uuid } from 'uuid';
 import bcrypt from 'bcrypt';
+import { validateToken } from "../repositories/tokenRepository.js";
 
 export async function authenticate(user, password) {
     if(user && bcrypt.compareSync(password, user.password)) {
@@ -13,4 +14,13 @@ export async function authenticate(user, password) {
     } else {
         return null;
     }
+}
+
+export async function validate(token) {
+
+    const userId = await validateToken(token);
+
+    if(userId === null) return null;
+
+    return userId;
 }

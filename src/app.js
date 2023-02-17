@@ -3,11 +3,11 @@ import cors from 'cors';
 import { categories, subCategories } from './controllers/categoriesController.js';
 import { brands, productBrand } from './controllers/brandsController.js';
 import { products, filterProducts } from './controllers/productsController.js'
-import { getSearch } from './controllers/search.js';
+import { search } from './controllers/searchController.js';
 import { login } from './controllers/userController.js';
 import { signUp, signUpAddress } from './controllers/signUpController.js';
 import { finishOrder } from './controllers/finishOrder.js';
-import { getOrders } from './controllers/getOrders.js';
+import { getOrders } from './controllers/ordersController.js';
 
 const app = express();
 app.use(cors());
@@ -29,9 +29,9 @@ app.get('/brands/:brandId', productBrand);
 
 app.get('/products/:category', products);
 
-app.get('/filter/products/:category', filterProducts);
+app.get('/products/filter/:category', filterProducts);
 
-app.get('/search/:search', getSearch);
+app.get('/search/:search', search);
 
 app.get('/get-orders', getOrders);
 
