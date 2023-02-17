@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { categories, subCategories } from './controllers/categoriesController.js';
 import { brands, productBrand } from './controllers/brandsController.js';
-import { getProducts, filterProducts } from './controllers/products.js'
+import { products, filterProducts } from './controllers/productsController.js'
 import { getSearch } from './controllers/search.js';
 import { login } from './controllers/userController.js';
 import { signUp, signUpAddress } from './controllers/signUpController.js';
@@ -27,7 +27,7 @@ app.get('/brands', brands);
 
 app.get('/brands/:brandId', productBrand);
 
-app.get('/products/:category', getProducts);
+app.get('/products/:category', products);
 
 app.get('/filter/products/:category', filterProducts);
 
