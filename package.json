@@ -5,7 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "set NODE_ENV=prod && npx nodemon src/server.js",
+    "test": "set NODE_ENV=test && npx jest"
   },
   "author": "Joao Lucas",
   "license": "ISC",

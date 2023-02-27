@@ -1,5 +1,6 @@
-import supertest from 'supertest';
+import '../src/setup.js';
 import app from '../src/app.js';
+import supertest from 'supertest';
 
 describe("POST /sign-up", () => {
     it("should respond with status 201 when there is no user with given email", async () => {
