@@ -9,5 +9,5 @@ export async function emailCheck(email, addressCheck) {
 
     if (emailCheck.rows.length === 0 && addressCheck === true) return null;
 
-    return emailCheck;
+    return emailCheck.rows[0];
 }

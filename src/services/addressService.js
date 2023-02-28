@@ -6,10 +6,10 @@ export async function authenticateAddress(addressObject) {
     const addressCheck = true;
     
     const check = await emailCheck(email, addressCheck);
-    
+
     if (check === null) return null;
 
-    const userId = check.rows[0].id;
+    const userId = check.id;
 
     await insertAddressData(street, cep, district, city, userId, phone);
 }

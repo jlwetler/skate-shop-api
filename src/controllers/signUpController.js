@@ -22,9 +22,9 @@ export async function signUpAddress(req, res) {
     try {
         const addressObject = await addressSchema(req.body);
         
-        await authenticateAddress(addressObject)
-
-        if(authenticateAddress === null) res.sendStatus(409);
+        const authentication = await authenticateAddress(addressObject)
+        console.log(authentication)
+        if(authentication === null) return res.sendStatus(409);
 
         res.sendStatus(201);
     } catch(e) {
