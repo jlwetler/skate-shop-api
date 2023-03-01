@@ -10,6 +10,7 @@ export async function getOrders(req, res) {
         const userId = await validate(authorization);
 
         if(userId === null) return res.sendStatus(401);
+        
         const result = await purchases(userId);
 
         if (result === null) return res.send([]);
