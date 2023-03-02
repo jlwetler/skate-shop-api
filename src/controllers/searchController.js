@@ -1,10 +1,10 @@
-import { getSearch } from "../repositories/searchRepository.js";
+import * as searchService from '../services/searchService.js'
 
 export async function search(req, res) {
     try {
         let { search } = req.params;
         
-        const searchProducts = await getSearch(search);
+        const searchProducts = await searchService.searchProducts(search);
 
         res.send(searchProducts).status(200);
 

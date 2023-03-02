@@ -1,18 +1,18 @@
-import { getPurchaseId } from "../repositories/purchaseRepository.js";
-import { placeOrder, insertProducts, updateStock } from "../repositories/orderRepository.js";
+import * as purchaseRepository from "../repositories/purchaseRepository.js";
+import * as orderRepository from "../repositories/orderRepository.js";
 
 export async function placeProducts(userId, cartInfo,orderPrice) {
-    await placeOrder(userId, orderPrice);
+    await orderRepository.placeOrder(userId, orderPrice);
 
-    const purchaseIds = await getPurchaseId(userId);
+    const purchaseIds = await purchaseRepository.getPurchaseId(userId);
     
     const purchaseId = purchaseIds[purchaseIds.length - 1].id;
        
     cartInfo.forEach(async ({id, quantity, price}) => {
-        await insertProducts(id, purchaseId, quantity, price)
+        await orderRepository.insertProducts(id, purchaseId, quantity, price);
     })
 
     cartInfo.forEach(async ({id, quantity}) => {
-        await updateStock(quantity, id)
+        await orderRepository.updateStock(quantity, id);
     })
 }

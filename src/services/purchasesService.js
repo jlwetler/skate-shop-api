@@ -1,13 +1,13 @@
-import { getPurchaseId, getPurchases } from "../repositories/purchaseRepository.js";
+import * as purchaseRepository from "../repositories/purchaseRepository.js";
 
-export async function purchases(userId) {
+export async function findPurchases(userId) {
 
-    const purchaseId = await getPurchaseId(userId)
+    const purchaseId = await purchaseRepository.getPurchaseId(userId);
 
     if (purchaseId === null) return null;
 
     const promise = purchaseId.map(async ({ id }) => {
-       return await getPurchases(id)
+       return await purchaseRepository.getPurchases(id);
     });
     
     const result = await Promise.all(promise);

@@ -1,5 +1,4 @@
-import { findUser } from "../repositories/userRepository.js";
-import { authenticate } from "../services/userService.js";
+import * as userService from "../services/userService.js";
 
 export async function login(req, res) {
     try {
@@ -7,9 +6,7 @@ export async function login(req, res) {
 
         if(!email || !password) return res.sendStatus(400);
 
-        const user = await findUser(email);
-        
-        const session = await authenticate(user, password);
+        const session = await userService.authenticateUser(email, password);
         
         if(session === null) return res.sendStatus(401);
 

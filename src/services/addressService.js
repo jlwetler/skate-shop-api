@@ -1,15 +1,15 @@
-import { emailCheck } from "../repositories/emailCheckRepository.js";
-import { insertAddressData } from "../repositories/insertAddressRepository.js";
+import * as emailRepository from "../repositories/emailRepository.js";
+import * as addressRepository from "../repositories/addressRepository.js";
 
 export async function authenticateAddress(addressObject) {
     const { street, cep, district, city, phone, email } = addressObject;
     const addressCheck = true;
     
-    const check = await emailCheck(email, addressCheck);
+    const check = await emailRepository.emailCheck(email, addressCheck);
 
     if (check === null) return null;
 
     const userId = check.id;
 
-    await insertAddressData(street, cep, district, city, userId, phone);
+    await addressRepository.insertAddressData(street, cep, district, city, userId, phone);
 }

@@ -1,4 +1,4 @@
-import { getFilteredProducts } from "../repositories/productsRepository.js";
+import * as productsRepository from "../repositories/productsRepository.js";
 
 export async function searchProducts(params, reqQuery) {
     const { category } = params;
@@ -30,7 +30,13 @@ export async function searchProducts(params, reqQuery) {
         orderBy = 'ORDER BY name ASC'
     }
 
-    const products = await getFilteredProducts(subCategory, subCategoryQuery, brandsQuery, orderBy, queryArray)
+    const products = await productsRepository.getFilteredProducts(subCategory, subCategoryQuery, brandsQuery, orderBy, queryArray)
     
+    return products;
+}
+
+export async function getProducts(category) {
+    const products = await productsRepository.getProducts(category);
+
     return products;
 }
