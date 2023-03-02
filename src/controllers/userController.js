@@ -8,12 +8,12 @@ export async function login(req, res) {
         if(!email || !password) return res.sendStatus(400);
 
         const user = await findUser(email);
+        
+        const session = await authenticate(user, password);
+        
+        if(session === null) return res.sendStatus(401);
 
-        const authentication = await authenticate(user, password);
-
-        if(authentication === null) return res.sendStatus(401);
-
-        res.send(authentication.rows[0]).status(200);
+        res.send(session).status(200);
         
     } catch(e){
         console.log(e);  

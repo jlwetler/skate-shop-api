@@ -1,7 +1,9 @@
 import { getPurchaseId } from "../repositories/purchaseRepository.js";
-import { insertProducts, updateStock } from "../repositories/orderRepository.js";
+import { placeOrder, insertProducts, updateStock } from "../repositories/orderRepository.js";
 
-export async function placeProducts(userId, cartInfo) {
+export async function placeProducts(userId, cartInfo,orderPrice) {
+    await placeOrder(userId, orderPrice);
+
     const purchaseIds = await getPurchaseId(userId);
     
     const purchaseId = purchaseIds[purchaseIds.length - 1].id;

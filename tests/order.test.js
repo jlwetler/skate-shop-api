@@ -2,7 +2,7 @@ import '../src/setup.js';
 import app from '../src/app.js';
 import supertest from 'supertest';
 import connection from '../src/database.js';
-import { loginFactory } from './utils.js';
+import { tokenFactory } from './factories/authenticationFactories.js';
 
 describe("GET /get-orders", () => {
     it("should respond with status 401 when token is invalid", async () => {
@@ -12,30 +12,14 @@ describe("GET /get-orders", () => {
 
         expect(response.status).toEqual(401);
     })
-});
-
-describe("GET /get-orders", () => {
-    it("should respond with empty object when token is valid but there is no previous orders", async () => {
-        const user = await loginFactory();
-        
-        const { token } = user.body;
-        
+    it("should respond with empty array when token is valid but there is no previous orders", async () => {
+        const token = await tokenFactory();
+     
         const orders = await supertest(app).get("/get-orders").set('Authorization', `Bearer ${token}`);
 
-        expect(orders.body).toEqual({});
+        expect(orders.body).toEqual([]);
     })
 });
-
-/*describe("GET /get-orders", () => {
-    it("should respond with orders object when token is valid and user has previous orders", async () => {
-        const response = await loginFactory();
-        const { token } = response.body;
-
-        const orders = await supertest(app).get("/get-orders").set('Authorization', `Bearer ${token}`);
-
-        expect(orders.body).toEqual({});
-    })
-});*/
 
 beforeEach( async () => {
     await connection.query(`DELETE FROM users`);

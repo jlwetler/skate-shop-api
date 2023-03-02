@@ -13,8 +13,8 @@ export async function createSession(id, token) {
         ON users.id = authentication."userId"
         JOIN address
         ON users.id = address."userId"
-        WHERE users.id = $1
-    `, [id]);
+        WHERE authentication.token = $1
+    `, [token]);
 
-    return session;
+    return session.rows[0];
 }
