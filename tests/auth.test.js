@@ -69,6 +69,8 @@ describe("POST /login", () => {
 
 beforeEach(async () => {
     await connection.query(`DELETE FROM users`);
+    await connection.query(`DELETE FROM authentication`);
+    await connection.query(`DELETE FROM address`);
 })
 
 afterAll(() => {

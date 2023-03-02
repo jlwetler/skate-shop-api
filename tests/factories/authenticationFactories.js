@@ -27,7 +27,7 @@ export async function loginFactory() {
 
 export async function tokenFactory() {
     const user = await loginFactory();
-    
+
     const { token } = user.body;
     
     return token;
