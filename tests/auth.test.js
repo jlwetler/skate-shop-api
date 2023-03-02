@@ -1,13 +1,15 @@
 import '../src/setup.js';
 import app from '../src/app.js';
 import supertest from 'supertest';
-import connection from '../src/database.js';
-import { userBody, addressBody } from './utils.js';
-import { 
-    signUpFactory, 
-    signAddressFactory, 
-    loginFactory, 
-} from './factories/authenticationFactories.js'
+import { userBody, addressBody, cleanDatabase, endConnection } from './utils.js';
+import { signUpFactory, signAddressFactory, loginFactory } from './factories/authenticationFactories.js'
+
+beforeEach(cleanDatabase);
+
+afterAll(async () => {
+    await cleanDatabase();
+    await endConnection();
+});
 
 describe("POST /sign-up", () => {
     it("should respond with status 201 when there is no user with given email", async () => {
@@ -27,9 +29,7 @@ describe("POST /sign-up", () => {
 
 describe("POST /sign-up/address", () => {
     it("should respond with status 201 when address has been registred", async () => {
-        const body = addressBody;
-       
-        const response = await signAddressFactory(body);
+        const response = await signAddressFactory(addressBody);
         
         expect(response.status).toEqual(201);
     });
@@ -45,7 +45,6 @@ describe("POST /sign-up/address", () => {
 
 describe("POST /login", () => {
     it("should respond with status 400 when email or password data is empty", async () => {
-
         const response = await supertest(app).post("/login").send({ email: "", password: "password" });
 
         expect(response.status).toEqual(400);
@@ -65,14 +64,3 @@ describe("POST /login", () => {
         expect(response.status).toEqual(200);
     })
 });
-
-
-beforeEach(async () => {
-    await connection.query(`DELETE FROM users`);
-    await connection.query(`DELETE FROM authentication`);
-    await connection.query(`DELETE FROM address`);
-})
-
-afterAll(() => {
-    connection.end();
-})

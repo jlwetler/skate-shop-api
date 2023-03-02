@@ -1,9 +1,16 @@
 import '../src/setup.js';
 import app from '../src/app.js';
 import supertest from 'supertest';
-import connection from '../src/database.js';
+import { cleanDatabase, endConnection } from './utils.js';
 import { tokenFactory } from './factories/authenticationFactories.js';
 import { finishOrderFactory } from './factories/orderFactories.js';
+
+beforeEach(cleanDatabase);
+
+afterAll(async () => {
+    await cleanDatabase();
+    await endConnection();
+});
 
 describe("GET /get-orders", () => {
     it("should respond with status 401 when token is invalid", async () => {
@@ -15,7 +22,7 @@ describe("GET /get-orders", () => {
     })
     it("should respond with empty array when token is valid but there is no previous purchases", async () => {
         const token = await tokenFactory();
-       
+        console.log("TOKEN", token);
         const orders = await supertest(app).get("/get-orders").set('Authorization', `Bearer ${token}`);
 
         expect(orders.body).toEqual([]);
@@ -48,14 +55,4 @@ describe("POST /finish-orders", () => {
 
         expect(response.status).toEqual(201);
     })
-})
-
-beforeEach( async () => {
-    await connection.query(`DELETE FROM users`);
-    await connection.query(`DELETE FROM authentication`);
-    await connection.query(`DELETE FROM products`);
-})
-
-afterAll(() => {
-    connection.end();
 })
