@@ -1,14 +1,9 @@
-import * as userService from "../services/userService.js";
 import * as purchasesService from "../services/purchasesService.js";
 import * as finishOrderService from "../services/finishOrderService.js";
 
 export async function getOrders(req, res) {
     try {
-        const authorization = req.header("Authorization");
-        
-        const userId = await userService.validate(authorization);
-        
-        if(userId === null) return res.sendStatus(401);
+        const userId = res.locals.userId;
         
         const result = await purchasesService.findPurchases(userId);
         
@@ -23,12 +18,9 @@ export async function getOrders(req, res) {
 
 export async function finishOrder(req, res) {
     try {
-        const authorization = req.header("Authorization");
         const { cartInfo, orderPrice} = req.body;
-        
-        const userId = await userService.validate(authorization);
 
-        if(userId === null) return res.sendStatus(401);
+        const userId = res.locals.userId;
         
         await finishOrderService.placeProducts(userId, cartInfo, orderPrice)
 
